@@ -1,6 +1,10 @@
 <template>
-    <div>
-        你好啊
+    <div class="container">
+        <HospitalTop />
+        <div class="context">
+            <RouterView></RouterView>
+        </div>
+        <HospitalBottom />
     </div>
 </template>
 
@@ -8,4 +12,18 @@
 
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.container {
+    display: flex;
+    // justify-content: center;
+    flex-direction: column;
+    align-items: center;
+
+    .context {
+        margin-top: 70px;
+        width: 1200px;
+        min-height: 700px;
+        background-color: #fff;
+    }
+}
+</style>
