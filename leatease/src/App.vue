@@ -4,6 +4,7 @@
         <div class="context">
             <RouterView></RouterView>
         </div>
+        <div>早上好</div>
         <HospitalBottom />
     </div>
 </template>
