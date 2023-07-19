@@ -1,12 +1,14 @@
 <template>
     <div class="search">
-        <el-autocomplete clearable placeholder="请输入医院名称" />
+        <el-autocomplete clearable placeholder="请输入医院名称" v-model="hosname" />
         <el-button type="primary" size="default" :icon="Search"></el-button>
     </div>
 </template>
 
 <script setup lang="ts">
 import { Search } from '@element-plus/icons-vue'
+import { ref } from 'vue'
+let hosname = ref<string>('')
 </script>
 
 <style scoped lang="scss">

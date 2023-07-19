@@ -7,10 +7,11 @@
         <!-- 底部结构 -->
         <el-row :gutter="20">
             <el-col :span="20">
-                <Sift />
-                <div class="hospital">
+                <Sift @getLevelAndRegion="getLevelAndRegion" />
+                <div class="hospital" v-if="hasHospitalArr.length > 0">
                     <Card class="card_context" v-for="item in hasHospitalArr" :key="item.id" :hospitalInfo="item" />
                 </div>
+                <el-empty v-else description="暂无数据" />
                 <!-- @size-change="handleSizeChange"
                 @current-change="handleCurrentChange" -->
                 <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize"
@@ -35,12 +36,15 @@ let currentPage = ref<number>(1)
 let pageSize = ref<number>(10)
 let hasHospitalArr = ref<Content>([])
 let total = ref<number>(0)
+//获取子组件传递的数据
+let hostype = ref<string>('')
+let districtCode = ref<string>('')
 //组件挂载完毕，发请求获取数据
 onMounted(() => {
     getHospitalData()
 })
 const getHospitalData = async () => {
-    let result: HospitalResponseData = await reqHospital(currentPage.value, pageSize.value)
+    let result: HospitalResponseData = await reqHospital(currentPage.value, pageSize.value, hostype.value, districtCode.value)
     if (result.code === 200) {
         hasHospitalArr.value = result.data.content
         total.value = result.data.totalElements
@@ -51,6 +55,12 @@ const handleCurrentChange = () => {
     getHospitalData()
 }
 const handleSizeChange = () => {
+    getHospitalData()
+}
+//通过自定义事件获取子组件传递的数据
+const getLevelAndRegion = (hostype1: string, districtCode1: string) => {
+    hostype.value = hostype1
+    districtCode.value = districtCode1
     getHospitalData()
 }
 </script>

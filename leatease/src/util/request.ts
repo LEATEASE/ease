@@ -21,7 +21,7 @@ request.interceptors.request.use((config) => {
 //响应拦截器
 request.interceptors.response.use((response) => {
     //响应拦截器的成功回调，一般会进行数据简化
-    return response.data
+    return response.data;
 }, (error) => {
     //处理http网络错误
     let status = error.response.status
