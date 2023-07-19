@@ -4,21 +4,12 @@
         <div class="context">
             <RouterView></RouterView>
         </div>
-        <div>早上好</div>
         <HospitalBottom />
     </div>
 </template>
 
 <script setup lang="ts">
-// test
-// import request from '@/util/request'
-// import { onMounted } from 'vue';
-// onMounted(() => {
-//     request.get('/hosp/hospital/1/10').then(res => {
-//         console.log(res);
 
-//     })
-// })
 </script>
 
 <style scoped lang="scss">
