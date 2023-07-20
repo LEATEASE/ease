@@ -1,5 +1,13 @@
+<!--
+ * @Author: LEATEASE 2112087898@qq.com
+ * @Date: 2023-07-18 10:16:51
+ * @LastEditors: LEATEASE 2112087898@qq.com
+ * @LastEditTime: 2023-07-20 18:13:05
+ * @FilePath: \leatease\leatease\src\pages\home\card\index.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <template>
-    <el-card class="box-card" shadow="hover">
+    <el-card class="box-card" shadow="hover" @click="goDetail">
         <div class="context">
             <div class="left">
                 <div class="hospital_name">{{ hospitalInfo.hosname }}</div>
@@ -25,15 +33,28 @@
                 </div>
             </div>
             <div class="right">
-                <img :src="`data:image/jpeg;base64,${hospitalInfo.logoData}`" alt="">
+                <el-avatar :size="50" :src="`data:image/jpeg;base64,${hospitalInfo.logoData}`" />
             </div>
         </div>
     </el-card>
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 // 接收父组件传递过来的props
-defineProps(['hospitalInfo'])
+let props = defineProps(['hospitalInfo'])
+// props.hospitalInfo
+// console.log(props.hospitalInfo);
+
+
+
+// console.log(props);
+let $router = useRouter();
+const goDetail = () => {
+    //点击推荐项目，进入hospital页面，将来要携带query参数（医院编码）
+    $router.push({ path: '/hospital/registration', query: props.hospitalInfo.hoscode })
+}
+
 </script>
 
 <style scoped lang="scss">
@@ -64,9 +85,8 @@ defineProps(['hospitalInfo'])
     }
 
     .right {
-        img {
-            width: 50px;
-            height: 50px;
+        :deep(.el-avatar) {
+            --el-avatar-bg-color: none
         }
     }
 }

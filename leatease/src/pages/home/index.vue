@@ -1,3 +1,11 @@
+<!--
+ * @Author: LEATEASE 2112087898@qq.com
+ * @Date: 2023-07-17 10:31:02
+ * @LastEditors: LEATEASE 2112087898@qq.com
+ * @LastEditTime: 2023-07-20 18:10:15
+ * @FilePath: \leatease\leatease\src\pages\home\index.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <template>
     <div>
         <!-- 轮播图结构 -->
@@ -18,7 +26,9 @@
                     :page-sizes="[2, 4, 6, 8, 10]" samll="true" layout=" prev, pager, next, jumper,->,sizes, total"
                     :total="total" @current-change="handleCurrentChange" @size-change="handleSizeChange" />
             </el-col>
-            <el-col :span="4">好家伙</el-col>
+            <el-col :span="4">
+                <News />
+            </el-col>
         </el-row>
     </div>
 </template>
@@ -28,6 +38,7 @@ import Carousel from '@/pages/home/carousel/index.vue'
 import Search from '@/pages/home/search/index.vue'
 import Sift from '@/pages/home/sift/index.vue'
 import Card from '@/pages/home/card/index.vue'
+import News from "@/pages/home/news/index.vue"
 import { onMounted, ref } from 'vue'
 //引入请求方法
 import { reqHospital } from '@/api/home'
