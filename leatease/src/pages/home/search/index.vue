@@ -34,7 +34,7 @@ const fetchData = async (keyword: string, cb: any) => {
 const goDetail = (item: any) => {
     console.log(item);
     //点击推荐项目，进入hospital页面，将来要携带query参数（医院编码）
-    $router.push({ path: '/hospital/registration' })
+    $router.push({ path: '/hospital/registration', query: { hoscode: item.hoscode } })
 }
 
 </script>

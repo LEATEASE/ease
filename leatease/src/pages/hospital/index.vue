@@ -1,4 +1,11 @@
-
+<!--
+ * @Author: LEATEASE 2112087898@qq.com
+ * @Date: 2023-07-17 10:31:43
+ * @LastEditors: LEATEASE 2112087898@qq.com
+ * @LastEditTime: 2023-07-20 21:40:16
+ * @FilePath: \leatease\leatease\src\pages\hospital\index.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <template>
     <div class="hospital">
         <el-container>
@@ -63,9 +70,16 @@ import {
     House,
 } from '@element-plus/icons-vue'
 import { useRoute } from 'vue-router';
+//引入小仓库
+import useDetailStore from '@/store/modules/hospitalDetail'
+import { onMounted } from 'vue';
+//获取仓库对象
+let detailStore = useDetailStore()
 let $route = useRoute()
-console.log();
-
+//组件挂载完成：通知pinia仓库发请求获取医院详情数据，存储在仓库中
+onMounted(() => {
+    detailStore.getHospitalDetail($route.query.hoscode);
+})
 </script>
 
 <style scoped></style>

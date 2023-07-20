@@ -2,7 +2,7 @@
  * @Author: LEATEASE 2112087898@qq.com
  * @Date: 2023-07-18 10:16:51
  * @LastEditors: LEATEASE 2112087898@qq.com
- * @LastEditTime: 2023-07-20 18:13:05
+ * @LastEditTime: 2023-07-20 20:34:29
  * @FilePath: \leatease\leatease\src\pages\home\card\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="right">
-                <el-avatar :size="50" :src="`data:image/jpeg;base64,${hospitalInfo.logoData}`" />
+                <el-avatar :size="60" :src="`data:image/jpeg;base64,${hospitalInfo.logoData}`" />
             </div>
         </div>
     </el-card>
@@ -52,7 +52,7 @@ let props = defineProps(['hospitalInfo'])
 let $router = useRouter();
 const goDetail = () => {
     //点击推荐项目，进入hospital页面，将来要携带query参数（医院编码）
-    $router.push({ path: '/hospital/registration', query: props.hospitalInfo.hoscode })
+    $router.push({ path: '/hospital/registration', query: { hoscode: props.hospitalInfo.hoscode } })
 }
 
 </script>
