@@ -42,13 +42,14 @@
         </div>
         <!-- 放置每一个医院的科室的数据 -->
         <div class="deparment">
-            <el-tabs tab-position="left" style="height: 500px;width: 100%" :stretch="true">
+            <el-tabs tab-position="left" style="height: 500px;width: 100%">
                 <el-tab-pane :label="deparment.depname" v-for="deparment in hospitalDetailInfo.hospitalDepartment"
                     :key="deparment.depcode">
                     <div class="showDepartment">
                         <h1>{{ deparment.depname }}</h1>
                         <ul>
-                            <li v-for="item in deparment.children" :key="item.depcode">{{ item.depname }}</li>
+                            <li @click="login" v-for="item in deparment.children" :key="item.depcode">{{ item.depname }}
+                            </li>
                         </ul>
                     </div>
                 </el-tab-pane>
@@ -61,6 +62,12 @@
 import useDetailStore from '@/store/modules/hospitalDetail';
 let hospitalDetailInfo = useDetailStore()
 // console.log(hospitalDetailInfo.hospitalDetail.hospital);
+//获取用户数据仓库
+import useUserStore from '@/store/modules/user.ts'
+const userStore = useUserStore()
+const login = () => {
+    userStore.visiable = true
+}
 </script>
 
 <style scoped lang="scss">
@@ -126,8 +133,16 @@ let hospitalDetailInfo = useDetailStore()
         margin-top: 20px;
 
         .showDepartment {
+            height: 500px;
+            overflow: auto;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
             h1 {
                 background-color: rgb(248, 248, 248);
+                margin-bottom: 10px;
             }
 
             // .infinite-list {
@@ -137,70 +152,20 @@ let hospitalDetailInfo = useDetailStore()
             // }
 
             ul {
+                margin-top: 10px;
                 display: flex;
                 flex-wrap: wrap;
+                // justify-content: space-evenly;
+                // align-items: center;
+                font-size: 14px;
+                color: #7f7f7f;
 
                 li {
-                    width: 250px;
+                    width: 33%;
+                    margin: 10px 0;
                 }
             }
         }
-
-        .leftNav {
-            width: 80px;
-            height: 100%;
-
-            /* ul {
-                width: 100%;
-                height: 100%;
-                background: rgb(248, 248, 248);
-                display: flex;
-                flex-direction: column;
-
-                li {
-                    flex: 1;
-                    text-align: center;
-                    color: #7f7f7f;
-                    font-size: 14px;
-                    line-height: 40px;
-
-                    &.active {
-                        border-left: 1px solid red;
-                        color: red;
-                        background: white;
-                    }
-                }
-            } */
-        }
-
-        /* .deparmentInfo {
-            flex: 1;
-            margin-left: 20px;
-            height: 100%;
-            overflow: auto;
-
-            &::-webkit-scrollbar {
-                display: none;
-            }
-
-            .showDeparment {
-                h1 {
-                    background-color: rgb(248, 248, 248);
-                    color: #7f7f7f;
-                }
-
-                ul {
-                    display: flex;
-                    flex-wrap: wrap;
-
-                    li {
-                        color: #7f7f7f;
-                        width: 33%;
-                        line-height: 30px;
-                    }
-                }
-            }
-        } */
     }
 }
 </style>

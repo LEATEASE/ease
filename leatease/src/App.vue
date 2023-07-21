@@ -5,6 +5,7 @@
             <RouterView></RouterView>
         </div>
         <HospitalBottom />
+        <Login />
     </div>
 </template>
 

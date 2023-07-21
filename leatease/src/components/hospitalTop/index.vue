@@ -7,7 +7,7 @@
             </div>
             <div class="right">
                 <p class="help">帮助中心</p>
-                <p>登录/注册</p>
+                <p @click="login">登录/注册</p>
             </div>
         </div>
     </div>
@@ -16,8 +16,14 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 let $router = useRouter()
+//获取用户数据仓库
+import useUserStore from '@/store/modules/user.ts'
+const userStore = useUserStore()
 const goHome = () => {
     $router.push({ path: '/home' })
+}
+const login = () => {
+    userStore.visiable = true
 }
 </script>
 
