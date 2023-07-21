@@ -20,32 +20,33 @@
                     </el-breadcrumb-item>
                     <el-breadcrumb-item>医院详情信息</el-breadcrumb-item>
                 </el-breadcrumb>
-                <el-menu :default-active="$route.path" class="el-menu-vertical-demo" :router="true">
-                    <el-menu-item index="/hospital/registration">
+                <!-- :router="true" -->
+                <el-menu :default-active="$route.path" class="el-menu-vertical-demo">
+                    <el-menu-item index="/hospital/registration" @click="changeActive('/hospital/registration')">
                         <el-icon>
                             <Calendar />
                         </el-icon>
                         <span>预约挂号</span>
                     </el-menu-item>
-                    <el-menu-item index="/hospital/detail">
+                    <el-menu-item index="/hospital/detail" @click="changeActive('/hospital/detail')">
                         <el-icon>
                             <document />
                         </el-icon>
                         <span>医院详情</span>
                     </el-menu-item>
-                    <el-menu-item index="/hospital/notice">
+                    <el-menu-item index="/hospital/notice" @click="changeActive('/hospital/notice')">
                         <el-icon>
                             <Bell />
                         </el-icon>
                         <span>预约通知</span>
                     </el-menu-item>
-                    <el-menu-item index="/hospital/discontinuation">
+                    <el-menu-item index="/hospital/discontinuation" @click="changeActive('/hospital/discontinuation')">
                         <el-icon>
                             <Warning />
                         </el-icon>
                         <span>停诊信息</span>
                     </el-menu-item>
-                    <el-menu-item index="/hospital/search">
+                    <el-menu-item index="/hospital/search" @click="changeActive('/hospital/search')">
                         <el-icon>
                             <Search />
                         </el-icon>
@@ -69,17 +70,24 @@ import {
     Search,
     House,
 } from '@element-plus/icons-vue'
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 //引入小仓库
 import useDetailStore from '@/store/modules/hospitalDetail'
 import { onMounted } from 'vue';
 //获取仓库对象
 let detailStore = useDetailStore()
 let $route = useRoute()
+let $router = useRouter()
 //组件挂载完成：通知pinia仓库发请求获取医院详情数据，存储在仓库中
 onMounted(() => {
-    detailStore.getHospitalDetail($route.query.hoscode);
+    //获取医院详情数据
+    detailStore.getHospitalDetail($route.query.hoscode as string);
+    // 获取医院科室数据
+    detailStore.getDepartment($route.query.hoscode as string)
 })
+const changeActive = (path: string) => {
+    $router.push({ path: path, query: { hoscode: $route.query.hoscode } })
+}
 </script>
 
-<style scoped></style>
+<style scoped lang="scss"></style>

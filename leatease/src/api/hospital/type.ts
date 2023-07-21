@@ -31,9 +31,9 @@ export interface HospitalDetail {
         },
         "hoscode": string,
         "hosname": string,
-        "hostype":string,
+        "hostype": string,
         "provinceCode": string,
-        "cityCode":string,
+        "cityCode": string,
         "districtCode": string,
         "address": string,
         "logoData": string,
@@ -45,6 +45,22 @@ export interface HospitalDetail {
 }
 
 //医院详情返回数据ts
-export interface HospitalDetailResponseData extends ResponseData{
-    data:HospitalDetail
+export interface HospitalDetailResponseData extends ResponseData {
+    data: HospitalDetail
+}
+//代表医院科室数据
+export interface Department {
+    "depcode": string,
+    "depname": string,
+    "children"?: Department[]
+}
+export interface HospitalDepartment {
+    "depcode": string,
+    "depname": string,
+    "children": Department[]
+}
+export type HospitalDepartmentArr = HospitalDepartment[]
+//医院科室返回数据ts类型
+export interface HospitalDepartmentResponseData extends ResponseData {
+    data: HospitalDepartmentArr
 }

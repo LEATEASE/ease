@@ -17,7 +17,7 @@
         <div class="content">
             <div class="left">
                 <el-avatar :size="80"
-                    :src="`data:image/jpeg;base64,` + hospitalDetailInfo.hospitalDetail.hospital?.logoData" />
+                    :src="`data:image/jpeg;base64,${hospitalDetailInfo.hospitalDetail.hospital?.logoData}`" />
             </div>
             <div class="right">
                 <div>挂号规则</div>
@@ -42,10 +42,17 @@
         </div>
         <!-- 放置每一个医院的科室的数据 -->
         <div class="deparment">
-            <div class="leftNav">
-            </div>
-            <div class="deparmentInfo">
-            </div>
+            <el-tabs tab-position="left" style="height: 500px;width: 100%" :stretch="true">
+                <el-tab-pane :label="deparment.depname" v-for="deparment in hospitalDetailInfo.hospitalDepartment"
+                    :key="deparment.depcode">
+                    <div class="showDepartment">
+                        <h1>{{ deparment.depname }}</h1>
+                        <ul>
+                            <li v-for="item in deparment.children" :key="item.depcode">{{ item.depname }}</li>
+                        </ul>
+                    </div>
+                </el-tab-pane>
+            </el-tabs>
         </div>
     </div>
 </template>
@@ -54,13 +61,13 @@
 import useDetailStore from '@/store/modules/hospitalDetail';
 let hospitalDetailInfo = useDetailStore()
 // console.log(hospitalDetailInfo.hospitalDetail.hospital);
-
 </script>
 
 <style scoped lang="scss">
 .register {
     .top {
         display: flex;
+        align-items: center;
 
         .title {
             font-size: 30px;
@@ -118,11 +125,32 @@ let hospitalDetailInfo = useDetailStore()
         display: flex;
         margin-top: 20px;
 
+        .showDepartment {
+            h1 {
+                background-color: rgb(248, 248, 248);
+            }
+
+            // .infinite-list {
+            //     &::-webkit-scrollbar {
+            //         display: none;
+            //     }
+            // }
+
+            ul {
+                display: flex;
+                flex-wrap: wrap;
+
+                li {
+                    width: 250px;
+                }
+            }
+        }
+
         .leftNav {
             width: 80px;
             height: 100%;
 
-            ul {
+            /* ul {
                 width: 100%;
                 height: 100%;
                 background: rgb(248, 248, 248);
@@ -142,10 +170,10 @@ let hospitalDetailInfo = useDetailStore()
                         background: white;
                     }
                 }
-            }
+            } */
         }
 
-        .deparmentInfo {
+        /* .deparmentInfo {
             flex: 1;
             margin-left: 20px;
             height: 100%;
@@ -172,7 +200,7 @@ let hospitalDetailInfo = useDetailStore()
                     }
                 }
             }
-        }
+        } */
     }
 }
 </style>
