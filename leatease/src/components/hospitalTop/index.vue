@@ -7,7 +7,23 @@
             </div>
             <div class="right">
                 <p class="help">帮助中心</p>
-                <p @click="login">登录/注册</p>
+                <p @click="login" v-if="!userStore.userLoginInfo.name">登录/注册</p>
+                <el-dropdown v-else>
+                    <span class="el-dropdown-link">
+                        {{ userStore.userLoginInfo.name }}
+                        <el-icon class="el-icon--right">
+                            <arrow-down />
+                        </el-icon>
+                    </span>
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                            <el-dropdown-item>你好</el-dropdown-item>
+                            <el-dropdown-item>Action 2</el-dropdown-item>
+                            <el-dropdown-item>Action 3</el-dropdown-item>
+                            <!-- <el-dropdown-item divided>Action 5</el-dropdown-item> -->
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
             </div>
         </div>
     </div>
@@ -15,6 +31,7 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
+import { ArrowDown } from '@element-plus/icons-vue'
 let $router = useRouter()
 //获取用户数据仓库
 import useUserStore from '@/store/modules/user.ts'
