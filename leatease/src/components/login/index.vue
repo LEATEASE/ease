@@ -1,14 +1,14 @@
 <template>
     <div class="login_container">
-        <el-dialog v-model="userStore.visiable" title="用户登录" @close="closeDialog">
+        <el-dialog v-model="userStore.visiable" title="用户登录">
             <el-row>
                 <el-col :span="12">
                     <div class="login" v-show="handoff === 0">
-                        <el-form>
-                            <el-form-item>
+                        <el-form :model="loginParams" :rules="rules" ref="form">
+                            <el-form-item prop="phone">
                                 <el-input placeholder="请输入手机号" :prefix-icon="User" v-model="loginParams.phone"></el-input>
                             </el-form-item>
-                            <el-form-item>
+                            <el-form-item prop="code">
                                 <el-row style="width: 100%;">
                                     <el-col :span="16"><el-input placeholder="请输入手机验证码" :prefix-icon="Lock"
                                             v-model="loginParams.code"></el-input></el-col>
@@ -81,7 +81,7 @@
                 </el-col>
             </el-row>
             <template #footer>
-                <el-button type="primary">
+                <el-button type="primary" @click="closeDialog">
                     关闭窗口
                 </el-button>
             </template>
@@ -94,8 +94,8 @@ import CountDown from '@/components/login/countDown/index.vue'
 import { computed, reactive, ref } from 'vue'
 import { User, Lock } from '@element-plus/icons-vue'
 //获取用户数据仓库
-import useUserStore from '@/store/modules/user.ts'
 import { ElMessage } from 'element-plus';
+import useUserStore from '@/store/modules/user.ts'
 const userStore = useUserStore()
 let handoff = ref<number>(0)//控制手机登录0还是微信登录1
 let flag = ref<boolean>(false)//控制验证码倒计时false不显示,true显示
@@ -103,6 +103,9 @@ const loginParams = reactive({
     phone: '',
     code: ''
 })
+let form = ref<any>()
+// console.log(form);
+
 //通过计算属性判断验证手机是否符合正则表达式
 let isPhone = computed(() => {
     const reg: RegExp = /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1589]))\d{8}$/;
@@ -111,7 +114,12 @@ let isPhone = computed(() => {
 //dialog窗口关闭后的事件
 const closeDialog = () => {
     // console.log(123);
-    handoff.value = 0
+    // handoff.value = 0
+    userStore.visiable = false
+    // Object.assign(loginParams, { phone: '', code: '' })
+    // //关闭窗口时，同时把表单校验结果清空
+    // form.value.resetFields()
+    // 第二种写法，在父组件直接控制显示与否，重新挂载
 }
 //切换手机登录的微信登录
 const changeHandoff = () => {
@@ -136,7 +144,10 @@ const getFlag = (value: boolean) => {
     flag.value = value
 }
 //用户登录
-const login = () => {
+const login = async () => {
+    //表单校验结果
+    await form.value.validate()
+
     userStore.getUserLogin(loginParams).then(() => {
         userStore.visiable = false
     }).catch((error) => {
@@ -146,6 +157,35 @@ const login = () => {
         })
     })
 }
+const ValidatorPhone = (rule: any, value: string, callBack: any) => {
+    //rule表单校验规则对象
+    //value:当前输入的文本内容
+    //callBack:回调函数
+    const reg: RegExp = /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1589]))\d{8}$/;
+    if (reg.test(value)) {
+        //符合要求，放行/^\d{15,17}$/
+        callBack()
+    } else {
+        callBack(new Error('请输入正确的手机号'))
+    }
+}
+const ValidatorCode = (rule: any, value: string, callBack: any) => {
+    //rule表单校验规则对象
+    //value:当前输入的文本内容
+    //callBack:回调函数
+    const reg: RegExp = /^\d{6}$/;
+    if (reg.test(value)) {
+        //符合要求，放行/^\d{15,17}$/
+        callBack()
+    } else {
+        callBack(new Error('请输入6位验证码'))
+    }
+}
+//表单校验规则
+const rules = reactive({
+    phone: [{ trigger: 'change', validator: ValidatorPhone }],
+    code: [{ trigger: 'change', validator: ValidatorCode }],
+})
 </script>
 
 <style scoped lang="scss">

@@ -1,7 +1,8 @@
 //定义用户仓库
 import { reqGetUserCode, reqUserLogin } from "@/api/user";
-import type { LoginData, UserCodeResponseData, UserInfo, UserLoginResponseData } from "@/api/user/type";
+import type { LoginData, UserCodeResponseData, UserLoginResponseData } from "@/api/user/type";
 import type { UserState } from "./interface";
+import { SET_TOKEN, GET_TOKEN, REMOVE_TOKEN } from '@/util/user'
 import { defineStore } from "pinia";
 
 const useUserStore = defineStore('User', {
@@ -9,7 +10,7 @@ const useUserStore = defineStore('User', {
         return {
             visiable: false,//用于控制登陆组件dialog显示与隐藏
             code: '',
-            userLoginInfo: ({} as UserInfo)
+            userLoginInfo: JSON.parse(GET_TOKEN() as string) || {}
         }
     },
     actions: {
@@ -27,11 +28,19 @@ const useUserStore = defineStore('User', {
             let result: UserLoginResponseData = await reqUserLogin(params)
             if (result.code === 200) {
                 this.userLoginInfo = result.data
+                //本地存储用户登录信息，持久化
+                SET_TOKEN(JSON.stringify(this.userLoginInfo))
                 //登录成功，返回
                 return 'ok'
             } else {
                 return Promise.reject(new Error(result.message))
             }
+        },
+        logout() {
+            //清空仓库用户数据
+            this.userLoginInfo = { name: '', token: '' }
+            //删除本地存储的数据
+            REMOVE_TOKEN()
         }
     },
     getters: {}

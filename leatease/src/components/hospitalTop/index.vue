@@ -17,9 +17,10 @@
                     </span>
                     <template #dropdown>
                         <el-dropdown-menu>
-                            <el-dropdown-item>你好</el-dropdown-item>
-                            <el-dropdown-item>Action 2</el-dropdown-item>
-                            <el-dropdown-item>Action 3</el-dropdown-item>
+                            <el-dropdown-item>实名验证</el-dropdown-item>
+                            <el-dropdown-item>挂号订单</el-dropdown-item>
+                            <el-dropdown-item>就诊人管理</el-dropdown-item>
+                            <el-dropdown-item divided @click="logout">退出登录</el-dropdown-item>
                             <!-- <el-dropdown-item divided>Action 5</el-dropdown-item> -->
                         </el-dropdown-menu>
                     </template>
@@ -39,8 +40,15 @@ const userStore = useUserStore()
 const goHome = () => {
     $router.push({ path: '/home' })
 }
+//点击用户登录，弹出对话框
 const login = () => {
     userStore.visiable = true
+}
+//退出登录，把用户信息清空，并清除本地存储
+const logout = () => {
+    userStore.logout();
+    //退出后，跳转到首页
+    $router.push({ path: '/home' })
 }
 </script>
 
