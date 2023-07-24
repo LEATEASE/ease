@@ -19,6 +19,10 @@ export default createRouter({
                     component: () => import('@/pages/hospital/registration/index.vue')
                 },
                 {
+                    path: 'register_step_1',
+                    component: () => import('@/pages/hospital/registration/register_step_1.vue')
+                },
+                {
                     path: 'detail',
                     component: () => import('@/pages/hospital/detail/index.vue')
                 },
@@ -39,6 +43,10 @@ export default createRouter({
                     redirect: '/hospital/registration'
                 },
             ]
+        },
+        {
+            path: '/wxlogin',
+            component: () => import('@/pages/wxlogin/index.vue')
         },
         {
             path: "/",

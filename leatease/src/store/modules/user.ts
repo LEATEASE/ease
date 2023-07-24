@@ -41,6 +41,16 @@ const useUserStore = defineStore('User', {
             this.userLoginInfo = { name: '', token: '' }
             //删除本地存储的数据
             REMOVE_TOKEN()
+        },
+        //查询微信扫码接口
+        queryState() {
+            let timeId = setInterval(() => {
+                if (GET_TOKEN()) {
+                    this.visiable = false
+                    this.userLoginInfo = JSON.parse(GET_TOKEN() as string)
+                    clearInterval(timeId)
+                }
+            }, 1000)
         }
     },
     getters: {}

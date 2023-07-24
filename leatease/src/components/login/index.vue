@@ -35,7 +35,7 @@
                         </div>
                     </div>
                     <div class="wechat_login" v-show="handoff === 1">
-                        <img src="../../assets/images/code_login_wechat.png" alt="">
+                        <div id="login_container"></div>
                         <p @click="changeHandoff">手机验证码登录</p>
                         <p>
                             <svg @click="changeHandoff" t="1690012980387" class="icon" viewBox="0 0 1024 1024" version="1.1"
@@ -62,7 +62,7 @@
                                 <p>“快速预约挂号”</p>
                             </div>
                             <div class="item">
-                                <img style="width: 130px; height: 130px" src="../../assets/images/code_app.png" />
+                                <img src="../../assets/images/code_app.png" />
                                 <svg t="1690012980387" class="icon" viewBox="0 0 1024 1024" version="1.1"
                                     xmlns="http://www.w3.org/2000/svg" p-id="5745" width="16" height="16">
                                     <path
@@ -91,11 +91,13 @@
 
 <script setup lang="ts">
 import CountDown from '@/components/login/countDown/index.vue'
-import { computed, reactive, ref } from 'vue'
+import { reqWXLogin } from '@/api/user';
+import { computed, reactive, ref, watch } from 'vue'
 import { User, Lock } from '@element-plus/icons-vue'
 //获取用户数据仓库
 import { ElMessage } from 'element-plus';
 import useUserStore from '@/store/modules/user.ts'
+import { WXLoginResponseData } from '@/api/user/type';
 const userStore = useUserStore()
 let handoff = ref<number>(0)//控制手机登录0还是微信登录1
 let flag = ref<boolean>(false)//控制验证码倒计时false不显示,true显示
@@ -122,8 +124,29 @@ const closeDialog = () => {
     // 第二种写法，在父组件直接控制显示与否，重新挂载
 }
 //切换手机登录的微信登录
-const changeHandoff = () => {
+const changeHandoff = async () => {
     handoff.value = handoff.value === 0 ? 1 : 0
+    // 发送请求获取微信扫码登录的需要的参数
+    //携带参数，即微信登录后重定向到某一个页面
+    //携带当前页面的地址参数，并进行编码
+    // console.log(encodeURIComponent(window.location.origin));
+    let rd_URL = encodeURIComponent(window.location.origin + '/wxlogin')
+    let result: WXLoginResponseData = await reqWXLogin(rd_URL)
+    // console.log(result.data);
+
+
+    // console.log(result.data.redirectUri);
+    //@ts-ignore
+    new WxLogin({
+        self_redirect: true,//true:手机点击登录确认登录后，可以在iframe内跳转到redirect_uri
+        id: "login_container",//显示二维码的容器
+        appid: result.data.appid,
+        scope: "snsapi_login",
+        redirect_uri: result.data.redirectUri,
+        state: result.data.state,
+        style: "black",
+        href: ""
+    });
 }
 //获取验证码
 const getCode = () => {
@@ -157,6 +180,7 @@ const login = async () => {
         })
     })
 }
+//@ts-ignore
 const ValidatorPhone = (rule: any, value: string, callBack: any) => {
     //rule表单校验规则对象
     //value:当前输入的文本内容
@@ -169,6 +193,7 @@ const ValidatorPhone = (rule: any, value: string, callBack: any) => {
         callBack(new Error('请输入正确的手机号'))
     }
 }
+//@ts-ignore
 const ValidatorCode = (rule: any, value: string, callBack: any) => {
     //rule表单校验规则对象
     //value:当前输入的文本内容
@@ -185,6 +210,12 @@ const ValidatorCode = (rule: any, value: string, callBack: any) => {
 const rules = reactive({
     phone: [{ trigger: 'change', validator: ValidatorPhone }],
     code: [{ trigger: 'change', validator: ValidatorCode }],
+})
+//监听场景的数据
+watch(() => handoff.value, (value: number) => {
+    if (value === 1) {
+        userStore.queryState()
+    }
 })
 </script>
 
@@ -203,13 +234,17 @@ const rules = reactive({
         flex-direction: column;
         align-items: center;
 
-        img {
-            width: 300px;
-        }
+        // img {
+        //     width: 300px;
+        // }
 
         p {
             margin: 5px 0;
         }
+
+        // #login_container {
+        //     width: 200px;
+        // }
     }
 
     .login {
@@ -222,7 +257,7 @@ const rules = reactive({
             align-items: center;
 
             p {
-                margin: 15px 0 10px 0;
+                margin: 5px 0;
             }
         }
     }
@@ -238,8 +273,8 @@ const rules = reactive({
                 align-items: center;
 
                 img {
-                    width: 130px;
-                    height: 130px;
+                    width: 150px;
+                    height: 150px;
                 }
             }
         }

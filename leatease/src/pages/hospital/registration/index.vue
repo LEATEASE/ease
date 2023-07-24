@@ -48,7 +48,8 @@
                     <div class="showDepartment">
                         <h1>{{ deparment.depname }}</h1>
                         <ul>
-                            <li @click="login" v-for="item in deparment.children" :key="item.depcode">{{ item.depname }}
+                            <li @click="login(item)" v-for="item in deparment.children" :key="item.depcode">{{ item.depname
+                            }}
                             </li>
                         </ul>
                     </div>
@@ -61,12 +62,18 @@
 <script setup lang="ts">
 import useDetailStore from '@/store/modules/hospitalDetail';
 let hospitalDetailInfo = useDetailStore()
+import { useRouter, useRoute } from 'vue-router';
 // console.log(hospitalDetailInfo.hospitalDetail.hospital);
 //获取用户数据仓库
-import useUserStore from '@/store/modules/user.ts'
-const userStore = useUserStore()
-const login = () => {
-    userStore.visiable = true
+// import useUserStore from '@/store/modules/user.ts'
+// const userStore = useUserStore()
+let $router = useRouter()
+let $route = useRoute()
+const login = (item: any) => {
+    // userStore.visiable = true
+    // console.log(item);
+    //路由跳转时，携带query参数
+    $router.push({ path: '/hospital/register_step_1', query: { hoscode: $route.query.hoscode, depcode: item.depcode } })
 }
 </script>
 
