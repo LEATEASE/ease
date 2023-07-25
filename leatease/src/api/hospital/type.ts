@@ -64,3 +64,68 @@ export type HospitalDepartmentArr = HospitalDepartment[]
 export interface HospitalDepartmentResponseData extends ResponseData {
     data: HospitalDepartmentArr
 }
+
+//医院预约时间表数据
+export interface BookingSchedule {
+    "workDate": string,
+    "workDateMd": string,
+    "dayOfWeek": string,
+    "docCount": number,
+    "reservedNumber": number,
+    "availableNumber": number,
+    "status": number
+}
+//医院预约时间表医院数据
+export interface BaseMap {
+    "workDateString": string,
+    "releaseTime": string,
+    "bigname": string,
+    "stopTime": string,
+    "depname": string,
+    "hosname": string
+}
+//医院预约时间数据
+export interface HospitalBookingSchedule {
+    total: number,
+    bookingScheduleList: BookingSchedule[],
+    baseMap: BaseMap
+}
+//医院预约时间表返回数据ts类型
+export interface HospitalBookingScheduleResponseData extends ResponseData {
+    data: {
+        total: number,
+        bookingScheduleList: BookingSchedule[],
+        baseMap: BaseMap
+    }
+}
+
+//代表医生排班数据
+export interface Doctor {
+    "id": string,
+    "createTime": string,
+    "updateTime": string,
+    "isDeleted": number,
+    "param": {
+        "dayOfWeek": string,
+        "depname": string,
+        "hosname": string
+    }
+    "hoscode": string,
+    "depcode": string,
+    "title": string,
+    "docname": string,
+    "skill": string,
+    "workDate": string,
+    "workTime": number,
+    "reservedNumber": number,
+    "availableNumber": number,
+    "amount": number,
+    "status": number,
+    "hosScheduleId": string
+}
+//定义医生排班数据数组
+export type DoctorArr = Doctor[]
+//医生排班返回数据类型
+export interface DoctorResponseData extends ResponseData {
+    data: DoctorArr
+}

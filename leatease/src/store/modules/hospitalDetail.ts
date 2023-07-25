@@ -9,8 +9,8 @@
 //定义小仓库的方法
 import { defineStore } from "pinia";
 //引入发请求的方法
-import { reqHospitalDepartment, reqHospitalDetail } from "@/api/hospital";
-import type { HospitalDepartmentResponseData, HospitalDetail, HospitalDetailResponseData } from '@/api/hospital/type'
+import { reqHospitalBooking, reqHospitalDepartment, reqHospitalDetail } from "@/api/hospital";
+import type { HospitalBookingSchedule, HospitalBookingScheduleResponseData, HospitalDepartmentResponseData, HospitalDetail, HospitalDetailResponseData } from '@/api/hospital/type'
 import type { DetailState } from "./interface";
 const useDetailStore = defineStore('Detail', {
     state: (): DetailState => {
@@ -18,7 +18,8 @@ const useDetailStore = defineStore('Detail', {
             //医院详情数据
             hospitalDetail: ({} as HospitalDetail),
             //医院科室数据
-            hospitalDepartment: []
+            hospitalDepartment: [],
+            hospitalBookingSchedule: ({} as HospitalBookingSchedule)
         }
     },
     actions: {
@@ -35,6 +36,12 @@ const useDetailStore = defineStore('Detail', {
             // console.log(result.data);
             if (result.code === 200) {
                 this.hospitalDepartment = result.data
+            }
+        },
+        async getHospitalBookingSechedule(page: number, limit: number, hoscode: string, depcode: string) {
+            let result: HospitalBookingScheduleResponseData = await reqHospitalBooking(page, limit, hoscode, depcode)
+            if (result.code === 200) {
+                this.hospitalBookingSchedule = result.data
             }
         }
     },

@@ -5,6 +5,7 @@
 //3.响应拦截器，可以简化服务器返回的数据，处理http网络错误
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
+import useUserStore from '@/store/modules/user'
 
 //利用axios.create方法创建axios实例：可以设置基础路径baseURL、超时的时间的设置timeOut
 const request = axios.create({
@@ -13,6 +14,11 @@ const request = axios.create({
 })
 //请求拦截器
 request.interceptors.request.use((config) => {
+    let userStore = useUserStore()
+    if (userStore.userLoginInfo) {
+        config.headers.token = userStore.userLoginInfo.token
+    }
+
     //请求拦截器注入配置（配置对象）
     //配置对象最重要的属性headers属性
     //通过请求头携带公共参数token
