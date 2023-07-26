@@ -1,4 +1,4 @@
-# ease
+# 樂安逸预约挂号系统
 vue3+vite+typescript
 # Vue 3 + TypeScript + Vite
 
