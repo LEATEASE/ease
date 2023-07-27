@@ -129,3 +129,7 @@ export type DoctorArr = Doctor[]
 export interface DoctorResponseData extends ResponseData {
     data: DoctorArr
 }
+//医生接口返回数据
+export interface DoctorInfoResponseData extends ResponseData {
+    data: Doctor
+}

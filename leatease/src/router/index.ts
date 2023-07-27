@@ -23,6 +23,10 @@ export default createRouter({
                     component: () => import('@/pages/hospital/registration/register_step_1.vue')
                 },
                 {
+                    path: 'register_step_2',
+                    component: () => import('@/pages/hospital/registration/register_step_2.vue')
+                },
+                {
                     path: 'detail',
                     component: () => import('@/pages/hospital/detail/index.vue')
                 },
@@ -47,6 +51,36 @@ export default createRouter({
         {
             path: '/wxlogin',
             component: () => import('@/pages/wxlogin/index.vue')
+        },
+        {
+            path: '/user',
+            component: () => import('@/pages/user/index.vue'),
+            children: [
+                {
+                    path: 'authentication',
+                    component: () => import('@/pages/user/authentication/index.vue')
+                },
+                {
+                    path: 'account',
+                    component: () => import('@/pages/user/account/index.vue')
+                },
+                {
+                    path: 'feedback',
+                    component: () => import('@/pages/user/feedback/index.vue')
+                },
+                {
+                    path: 'order',
+                    component: () => import('@/pages/user/order/index.vue')
+                },
+                {
+                    path: 'patient',
+                    component: () => import('@/pages/user/patient/index.vue')
+                },
+                {
+                    path: "/user",
+                    redirect: '/hospital/authentication'
+                },
+            ]
         },
         {
             path: "/",

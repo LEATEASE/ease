@@ -36,7 +36,7 @@
                 <span class="date">{{ workTime.workDate }}</span>
                 <span class="will_text">放号</span>
             </div>
-            <div class="doctor" v-if="workTime.status !== 1">
+            <div class="doctor" v-show="workTime.status !== 1">
                 <div class="currentslot">
                     <div class="tip">
                         <svg t="1690277307719" class="icon" viewBox="0 0 1024 1024" version="1.1"
@@ -60,7 +60,7 @@
                         </div>
                         <div class="info_right">
                             <div class="money">￥{{ item.amount }}</div>
-                            <el-button type="primary">剩余{{ item.availableNumber }}</el-button>
+                            <el-button type="primary" @click="goToStep2(item)">剩余{{ item.availableNumber }}</el-button>
                         </div>
                     </div>
                 </div>
@@ -90,7 +90,7 @@
                         </div>
                         <div class="info_right">
                             <div class="money">￥{{ item.amount }}</div>
-                            <el-button type="primary">剩余{{ item.availableNumber }}</el-button>
+                            <el-button type="primary" @click="goToStep2(item)">剩余{{ item.availableNumber }}</el-button>
                         </div>
                     </div>
                 </div>
@@ -103,10 +103,12 @@
 import { computed, onMounted, reactive, ref } from 'vue';
 import useDetailStore from '@/store/modules/hospitalDetail'
 import { reqDoctorWorkDate } from '@/api/hospital';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import type { DoctorArr, Doctor } from '@/api/hospital/type';
 let detailStore = useDetailStore()
 let $route = useRoute()
+//获取路由器对象
+let $router = useRouter()
 let pageNo = ref<number>(1)
 let limit = ref<number>(6)
 //获取当天的医生排班数据
@@ -115,11 +117,12 @@ let doctorArr = ref<DoctorArr>([])
 //加async，让下面的函数同步进行
 onMounted(async () => {
     await getBookingSchedule()
-    getDoctorWorkDate()
+
 })
 const getBookingSchedule = async () => {
     await detailStore.getHospitalBookingSechedule(pageNo.value, limit.value, $route.query.hoscode as string, $route.query.depcode as string)
     workTime = detailStore.hospitalBookingSchedule?.bookingScheduleList[0]
+    getDoctorWorkDate()
 }
 const getDoctorWorkDate = async () => {
     let result = await reqDoctorWorkDate($route.query.hoscode as string, $route.query.depcode as string, workTime.workDate)
@@ -140,6 +143,11 @@ const afternoonDoctor = computed(() => {
         return item.workTime === 1
     })
 })
+//点击跳转到就诊人信息选择界面
+const goToStep2 = (item: Doctor) => {
+    // console.log(item);
+    $router.push({ path: '/hospital/register_step_2', query: { docId: item.id, hoscode: $route.query.hoscode } })
+}
 </script>
 
 <style scoped lang="scss">
@@ -177,16 +185,20 @@ const afternoonDoctor = computed(() => {
         .center_container {
             width: 100%;
             display: flex;
+            flex-wrap: nowrap;
             margin: 50px 0;
 
             .item {
-                flex: 1;
+                width: 16%;
                 border: 1px solid skyblue;
-                margin: 0 10px;
+                margin: 0 4px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                transition: all 0.5s;
+                // justify-content: space-between;
+                // justify-items: center;
+                // justify-content: right;
+                transition: all 0.2s;
 
                 // margin-top: 50px;
                 &.active {
@@ -198,7 +210,7 @@ const afternoonDoctor = computed(() => {
                 }
 
                 &.item_hover {
-                    transform: scale(1.15);
+                    transform: scale(1.05);
                 }
 
                 .item_top {

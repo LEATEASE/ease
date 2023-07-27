@@ -31,3 +31,43 @@ export interface WXLogin {
 export interface WXLoginResponseData extends ResponseData {
     data: WXLogin
 }
+//代表个就诊人的信息
+export interface VisitorInfo {
+    "id": number,
+    "createTime": string,
+    "updateTime": string,
+    "isDeleted": number,
+    "param": {
+        "certificatesTypeString": string,
+        "contactsCertificatesTypeString": string,
+        "cityString": null,
+        "fullAddress": string,
+        "districtString": null,
+        "provinceString": null
+    },
+    "userId": number,
+    "name": number,
+    "certificatesType": string,
+    "certificatesNo": string,
+    "sex": number,
+    "birthdate": string,
+    "phone": string,
+    "isMarry": number,
+    "provinceCode": null,
+    "cityCode": null,
+    "districtCode": null,
+    "address": string,
+    "contactsName": string,
+    "contactsCertificatesType": string,
+    "contactsCertificatesNo": string,
+    "contactsPhone": string,
+    "isInsure": number,
+    "cardNo": null,
+    "status": string
+}
+//代表就诊人信息列表类型
+export type VisitorList = VisitorInfo[]
+//就诊人信息返回接口数据ts类型
+export interface VisitorResonpData extends ResponseData {
+    data: VisitorList
+}

@@ -1,5 +1,5 @@
 <template>
-    <div class="hospital">
+    <div class="user">
         <el-container>
             <el-aside width="250px">
                 <!-- <h5 class="mb-2">Default colors</h5> -->
@@ -10,39 +10,39 @@
                         </el-icon>
                         <span> Home</span>
                     </el-breadcrumb-item>
-                    <el-breadcrumb-item>医院详情信息</el-breadcrumb-item>
+                    <el-breadcrumb-item>会员中心</el-breadcrumb-item>
                 </el-breadcrumb>
                 <!-- :router="true" -->
                 <el-menu :default-active="$route.path" class="el-menu-vertical-demo">
-                    <el-menu-item index="/hospital/registration" @click="changeActive('/hospital/registration')">
+                    <el-menu-item index="/user/authentication" @click="changeActive('/user/authentication')">
                         <el-icon>
                             <Calendar />
                         </el-icon>
-                        <span>预约挂号</span>
+                        <span>实名认证</span>
                     </el-menu-item>
-                    <el-menu-item index="/hospital/detail" @click="changeActive('/hospital/detail')">
+                    <el-menu-item index="/user/order" @click="changeActive('/user/order')">
                         <el-icon>
                             <document />
                         </el-icon>
-                        <span>医院详情</span>
+                        <span>挂号订单</span>
                     </el-menu-item>
-                    <el-menu-item index="/hospital/notice" @click="changeActive('/hospital/notice')">
+                    <el-menu-item index="/user/patient" @click="changeActive('/user/patient')">
                         <el-icon>
                             <Bell />
                         </el-icon>
-                        <span>预约通知</span>
+                        <span>就诊人管理</span>
                     </el-menu-item>
-                    <el-menu-item index="/hospital/discontinuation" @click="changeActive('/hospital/discontinuation')">
+                    <el-menu-item index="/user/account" @click="changeActive('/user/account')">
                         <el-icon>
                             <Warning />
                         </el-icon>
-                        <span>停诊信息</span>
+                        <span>账号信息</span>
                     </el-menu-item>
-                    <el-menu-item index="/hospital/search" @click="changeActive('/hospital/search')">
+                    <el-menu-item index="/user/feedback" @click="changeActive('/user/feedback')">
                         <el-icon>
                             <Search />
                         </el-icon>
-                        <span>查询/取消</span>
+                        <span>意见反馈</span>
                     </el-menu-item>
                 </el-menu>
             </el-aside>
@@ -63,27 +63,19 @@ import {
     House,
 } from '@element-plus/icons-vue'
 import { useRoute, useRouter } from 'vue-router';
-//引入小仓库
-import useDetailStore from '@/store/modules/hospitalDetail'
 import { onMounted } from 'vue';
 //获取仓库对象
-let detailStore = useDetailStore()
 let $route = useRoute()
 let $router = useRouter()
-//组件挂载完成：通知pinia仓库发请求获取医院详情数据，存储在仓库中
 onMounted(() => {
-    //获取医院详情数据
-    detailStore.getHospitalDetail($route.query.hoscode as string);
-    // 获取医院科室数据
-    detailStore.getDepartment($route.query.hoscode as string)
 })
 const changeActive = (path: string) => {
-    $router.push({ path: path, query: { hoscode: $route.query.hoscode } })
+    $router.push({ path: path })
 }
 </script>
 
 <style scoped lang="scss">
-.hospital {
+.user {
     .bread {
         margin: 20px 0;
     }
