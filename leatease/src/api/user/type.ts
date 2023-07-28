@@ -71,3 +71,42 @@ export type VisitorList = VisitorInfo[]
 export interface VisitorResonpData extends ResponseData {
     data: VisitorList
 }
+
+//订单编号返回数据类型
+export interface SubmitOrderResonpData extends ResponseData {
+    data: number
+}
+//代表订单详情
+export interface OrderInfo {
+    "id": number,
+    "createTime": string,
+    "updateTime": string,
+    "isDeleted": number,
+    "param": {
+        "orderStatusString": string
+    },
+    "userId": number,
+    "outTradeNo": string,
+    "hoscode": string,
+    "hosname": string,
+    "depcode": string,
+    "depname": string,
+    "scheduleId": string,
+    "title": string,
+    "reserveDate": string,
+    "reserveTime": number,
+    "patientId": number,
+    "patientName": string,
+    "patientPhone": string,
+    "hosRecordId": string,
+    "number": number,
+    "fetchTime": string,
+    "fetchAddress": string,
+    "amount": number,
+    "quitTime": string,
+    "orderStatus": number
+}
+//定义订单详情返回接口数据ts类型
+export interface OrderInfoResonpData extends ResponseData {
+    data: OrderInfo
+}

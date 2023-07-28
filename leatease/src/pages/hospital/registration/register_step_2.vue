@@ -81,7 +81,7 @@
             </el-descriptions>
         </el-card>
         <div class="btn">
-            <el-button type="primary" :disabled="visId === 0 ? true : false">立即挂号</el-button>
+            <el-button type="primary" :disabled="visId === 0 ? true : false" @click="submitOrder">立即挂号</el-button>
         </div>
     </div>
 </template>
@@ -90,16 +90,18 @@
 import { User } from '@element-plus/icons-vue'
 import Visitor from '@/pages/hospital/registration/visitor.vue'
 import { onMounted, ref } from 'vue';
-import { reqVisitorList } from '@/api/user';
+import { reqSubmitOrder, reqVisitorList } from '@/api/user';
 import { reqDoctorInfo } from "@/api/hospital"
 import type { VisitorResonpData, VisitorList } from '@/api/user/type';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { DoctorInfoResponseData } from '@/api/hospital/type';
+import { ElMessage } from 'element-plus';
 //存储就诊人列表信息
 let visitorList = ref<VisitorList>([])
 //存储医生信息
 let doctorInfo = ref<any>({})
 let $route = useRoute()
+let $router = useRouter()
 let visId = ref<number>(0)
 onMounted(() => {
     fecthVisitorList()
@@ -123,6 +125,21 @@ const fetchDoctorInfo = async () => {
 //点击选择就诊人
 const selected = (visitorId: number) => {
     visId.value = visitorId
+}
+//立即挂号按钮事件处理函数
+const submitOrder = async () => {
+    // console.log('6225753136a9ba1be763dc13');
+    let result = await reqSubmitOrder($route.query.hoscode as string, $route.query.docId as string, visId.value)
+    if (result.code === 200) {
+        //路由跳转携带参数
+        $router.push({ path: '/user/order', query: { orderId: result.data } })
+    } else {
+        ElMessage({
+            type: 'error',
+            message: result.message || '操作失败'
+
+        })
+    }
 }
 </script>
 <style scoped lang="scss">
