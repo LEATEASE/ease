@@ -12,7 +12,7 @@
                             d="M892.064 261.888a31.936 31.936 0 0 0-45.216 1.472L421.664 717.248l-220.448-185.216a32 32 0 1 0-41.152 48.992l243.648 204.704a31.872 31.872 0 0 0 20.576 7.488 31.808 31.808 0 0 0 23.36-10.112L893.536 307.136a32 32 0 0 0-1.472-45.248z"
                             p-id="2332" fill="#1afa29"></path>
                     </svg>
-                    <span>预约成功，待支付</span>
+                    <span>{{ orderInfo.param?.orderStatusString }}</span>
                 </div>
             </el-tag>
             <div class="right_info">
@@ -33,7 +33,7 @@
                                     就诊人信息
                                 </div>
                             </template>
-                            樂安逸
+                            {{ orderInfo.patientName }}
                         </el-descriptions-item>
                         <el-descriptions-item>
                             <template #label>
@@ -41,7 +41,7 @@
                                     就诊日期
                                 </div>
                             </template>
-                            18100000000
+                            {{ orderInfo.reserveDate }}
                         </el-descriptions-item>
                         <el-descriptions-item>
                             <template #label>
@@ -49,7 +49,7 @@
                                     就诊医院
                                 </div>
                             </template>
-                            Suzhou
+                            {{ orderInfo.hosname }}
                         </el-descriptions-item>
                         <el-descriptions-item>
                             <template #label>
@@ -57,7 +57,7 @@
                                     就诊科室
                                 </div>
                             </template>
-                            精神科
+                            {{ orderInfo.depname }}
                         </el-descriptions-item>
                         <el-descriptions-item>
                             <template #label>
@@ -65,7 +65,7 @@
                                     医生职称
                                 </div>
                             </template>
-                            你好
+                            {{ orderInfo.title }}
                         </el-descriptions-item>
                         <el-descriptions-item>
                             <template #label>
@@ -73,7 +73,7 @@
                                     医事服务费
                                 </div>
                             </template>
-                            你好
+                            <span class="money">{{ orderInfo.amount }}元</span>
                         </el-descriptions-item>
                         <el-descriptions-item>
                             <template #label>
@@ -81,7 +81,7 @@
                                     挂号订单
                                 </div>
                             </template>
-                            你好
+                            {{ orderInfo.outTradeNo }}
                         </el-descriptions-item>
                         <el-descriptions-item>
                             <template #label>
@@ -89,12 +89,16 @@
                                     挂号时间
                                 </div>
                             </template>
-                            你好
+                            {{ orderInfo.createTime }}
                         </el-descriptions-item>
                     </el-descriptions>
-                    <div class="btn">
-                        <el-button>取消预约</el-button>
-                        <el-button type="primary">支付</el-button>
+                    <div class="btn" v-if="orderInfo.orderStatus !== -1">
+                        <el-popconfirm title="确定取消预约吗?" @confirm="cancel">
+                            <template #reference>
+                                <el-button>取消预约</el-button>
+                            </template>
+                        </el-popconfirm>
+                        <el-button type="primary" v-if="orderInfo.orderStatus !== 1" @click="openDialog">支付</el-button>
                     </div>
                 </el-aside>
                 <el-main>
@@ -114,20 +118,88 @@
             </el-container>
         </div>
     </el-card>
+    <!-- 展示二维码支付的结构 -->
+    <el-dialog v-model="dialogVisible" width="400px" @close="closeDialog">
+        <template #header>
+            微信支付
+        </template>
+        <div class="context">
+            <img :src="imgUrl" alt="">
+            <p>请使用微信扫一扫</p>
+            <p>扫瞄二维码支付</p>
+        </div>
+        <template #footer>
+            <el-button size="small" @click="closeDialog">关闭窗口</el-button>
+        </template>
+    </el-dialog>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { reqGetOrderInfo } from '@/api/user';
+import { reqGetOrderInfo, reqCancelOrder, reqQrcode, reqPayResult } from '@/api/user';
 import { useRoute } from 'vue-router';
+import type { OrderInfoResonpData, QrcodeResponseData, PayResultResponse } from '@/api/user/type';
+import { ElMessage } from 'element-plus';
+// @ts-ignore
+import QRCode from 'qrcode'
+//定时器
+let timer = ref<any>()
 //组件挂载完毕，获取数据
 onMounted(() => {
     getOrderInfo()
 })
+let orderInfo = ref<any>({})
+//控制对话框的显示与隐藏
+let dialogVisible = ref<boolean>(false)
 let $route = useRoute()
+//存储支付二维码的地址
+let imgUrl = ref<string>('')
 const getOrderInfo = async () => {
-    let result = await reqGetOrderInfo($route.query.orderId as string)
-    console.log(result);
+    let result: OrderInfoResonpData = await reqGetOrderInfo($route.query.orderId as string)
+    if (result.code === 200) {
+        orderInfo.value = result.data
+        // console.log(orderInfo.value);
+    }
+}
+const cancel = async () => {
+    try {
+        await reqCancelOrder($route.query.orderId as string)
+        getOrderInfo()
+    } catch (error) {
+        ElMessage({
+            type: 'error',
+            message: "取消预约失败"
+        })
+    }
+
+}
+const openDialog = async () => {
+    dialogVisible.value = true
+    // 发请求获取支付二维码
+    let result: QrcodeResponseData = await reqQrcode($route.query.orderId as string)
+    // console.log(result);
+    imgUrl.value = await QRCode.toDataURL(result.data.codeUrl)
+    //开启定时器，每隔几秒查询支付结果
+    timer.value = setInterval(async () => {
+        let result: PayResultResponse = await reqPayResult($route.query.orderId as string)
+        //如果支付成功
+        if (result.data) {
+            //关闭支付窗口
+            dialogVisible.value = false
+            //提示支付成功
+            ElMessage({
+                type: 'success',
+                message: result.message
+            })
+            //关闭定时器
+            clearInterval(timer.value)
+            getOrderInfo()
+        }
+    }, 2000)
+}
+const closeDialog = () => {
+    dialogVisible.value = false
+    clearInterval(timer.value)
 }
 </script>
 
@@ -197,6 +269,26 @@ const getOrderInfo = async () => {
                 }
             }
         }
+
+        .money {
+            color: red;
+        }
+    }
+}
+
+.context {
+    // width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    img {
+        width: 250px;
+        height: 250px;
+    }
+
+    p {
+        margin: 5px 0;
     }
 }
 </style>

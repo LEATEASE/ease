@@ -110,3 +110,18 @@ export interface OrderInfo {
 export interface OrderInfoResonpData extends ResponseData {
     data: OrderInfo
 }
+//代表二维码数据
+export interface Qrcode {
+    "codeUrl": string,
+    "orderId": number,
+    "totalFee": number,
+    "resultCode": string
+}
+//定义二维码接口返回的数据ts类型
+export interface QrcodeResponseData extends ResponseData {
+    data: Qrcode
+}
+//定义支付结果接口返回数据类型
+export interface PayResultResponse extends ResponseData {
+    data: boolean
+}
