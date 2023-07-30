@@ -5,10 +5,12 @@
                 <!-- <h5 class="mb-2">Default colors</h5> -->
                 <el-breadcrumb separator="/" class="bread">
                     <el-breadcrumb-item :to="{ path: '/' }">
-                        <el-icon>
-                            <House />
-                        </el-icon>
-                        <span> Home</span>
+                        <div style="display: flex;font-size: 16px;align-items: center;">
+                            <el-icon>
+                                <House />
+                            </el-icon>
+                            <span> Home</span>
+                        </div>
                     </el-breadcrumb-item>
                     <el-breadcrumb-item>会员中心</el-breadcrumb-item>
                 </el-breadcrumb>
@@ -16,7 +18,7 @@
                 <el-menu :default-active="$route.path" class="el-menu-vertical-demo">
                     <el-menu-item index="/user/authentication" @click="changeActive('/user/authentication')">
                         <el-icon>
-                            <Calendar />
+                            <Postcard />
                         </el-icon>
                         <span>实名认证</span>
                     </el-menu-item>
@@ -28,19 +30,19 @@
                     </el-menu-item>
                     <el-menu-item index="/user/patient" @click="changeActive('/user/patient')">
                         <el-icon>
-                            <Bell />
+                            <Setting />
                         </el-icon>
                         <span>就诊人管理</span>
                     </el-menu-item>
                     <el-menu-item index="/user/account" @click="changeActive('/user/account')">
                         <el-icon>
-                            <Warning />
+                            <User />
                         </el-icon>
                         <span>账号信息</span>
                     </el-menu-item>
                     <el-menu-item index="/user/feedback" @click="changeActive('/user/feedback')">
                         <el-icon>
-                            <Search />
+                            <ChatDotRound />
                         </el-icon>
                         <span>意见反馈</span>
                     </el-menu-item>
@@ -56,10 +58,10 @@
 <script setup lang="ts">
 import {
     Document,
-    Calendar,
-    Bell,
-    Warning,
-    Search,
+    Postcard,
+    Setting,
+    User,
+    ChatDotRound,
     House,
 } from '@element-plus/icons-vue'
 import { useRoute, useRouter } from 'vue-router';

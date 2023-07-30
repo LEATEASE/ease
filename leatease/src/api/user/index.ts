@@ -1,6 +1,6 @@
 //定义用户相关的接口
 import request from '@/util/request'
-import type { LoginData, OrderInfoResonpData, PayResultResponse, QrcodeResponseData, SubmitOrderResonpData, UserCodeResponseData, UserLoginResponseData, VisitorResonpData, WXLoginResponseData } from './type'
+import type { UserInformatiomResponseData, LoginData, OrderInfoResonpData, PayResultResponse, QrcodeResponseData, SubmitOrderResonpData, UserCodeResponseData, UserLoginResponseData, VisitorResonpData, WXLoginResponseData } from './type'
 enum API {
     GETUSERCODE_URL = '/sms/send/',
     USERLOGIN_URL = '/user/login',
@@ -16,7 +16,9 @@ enum API {
     //获取订单支付二维码
     QRCODE_URL = '/order/weixin/createNative/',
     //获取支付结果
-    PAYRESULT_URL = '/order/weixin/queryPayStatus/'
+    PAYRESULT_URL = '/order/weixin/queryPayStatus/',
+    //获取用户信息
+    GETUSERINFO_URL = '/user/auth/getUserInfo'
 }
 export const reqGetUserCode = (phone: string) => request.get<any, UserCodeResponseData>(API.GETUSERCODE_URL + phone)
 //用户登录
@@ -35,3 +37,5 @@ export const reqCancelOrder = (id: string) => request.get<any, any>(API.CANCELOR
 export const reqQrcode = (orderId: string) => request.get<any, QrcodeResponseData>(API.QRCODE_URL + orderId)
 //获取订单支付结果
 export const reqPayResult = (orderId: string) => request.get<any, PayResultResponse>(API.PAYRESULT_URL + orderId)
+//获取用户信息
+export const reqUserInfo = () => request.get<any, UserInformatiomResponseData>(API.GETUSERINFO_URL)
