@@ -1,6 +1,6 @@
 //定义用户相关的接口
 import request from '@/util/request'
-import type { UserInformatiomResponseData, LoginData, OrderInfoResonpData, PayResultResponse, QrcodeResponseData, SubmitOrderResonpData, UserCodeResponseData, UserLoginResponseData, VisitorResonpData, WXLoginResponseData } from './type'
+import type { AuthParams, CertificatesTypeResponseData, UserInformatiomResponseData, LoginData, OrderInfoResonpData, PayResultResponse, QrcodeResponseData, SubmitOrderResonpData, UserCodeResponseData, UserLoginResponseData, VisitorResonpData, WXLoginResponseData } from './type'
 enum API {
     GETUSERCODE_URL = '/sms/send/',
     USERLOGIN_URL = '/user/login',
@@ -18,7 +18,11 @@ enum API {
     //获取支付结果
     PAYRESULT_URL = '/order/weixin/queryPayStatus/',
     //获取用户信息
-    GETUSERINFO_URL = '/user/auth/getUserInfo'
+    GETUSERINFO_URL = '/user/auth/getUserInfo',
+    //获取证件类型的接口
+    CERTIFICATES_URL = '/cmn/dict/findByDictCode/',
+    //用户实名认证的接口 post
+    USERAUAH_URL = '/user/auth/userAuah'
 }
 export const reqGetUserCode = (phone: string) => request.get<any, UserCodeResponseData>(API.GETUSERCODE_URL + phone)
 //用户登录
@@ -39,3 +43,7 @@ export const reqQrcode = (orderId: string) => request.get<any, QrcodeResponseDat
 export const reqPayResult = (orderId: string) => request.get<any, PayResultResponse>(API.PAYRESULT_URL + orderId)
 //获取用户信息
 export const reqUserInfo = () => request.get<any, UserInformatiomResponseData>(API.GETUSERINFO_URL)
+//获取证件类型
+export const reqCertificates = (CertificatesType = 'CertificatesType') => request.get<any, CertificatesTypeResponseData>(API.CERTIFICATES_URL + CertificatesType)
+//用户实名认证，需要携带参数
+export const reqUserAuth = (data: AuthParams) => request.post<any, any>(API.USERAUAH_URL, data)

@@ -146,3 +146,30 @@ export interface UserInformation {
 export interface UserInformatiomResponseData extends ResponseData {
     data: UserInformation
 }
+
+//代表证件类型的数据类型
+export interface CertificatesType {
+    "id": number,
+    "createTime": string,
+    "updateTime": string,
+    "isDeleted": number,
+    "param": {},
+    "parentId": number,
+    "name": string,
+    "value": string,
+    "dictCode": string,
+    "hasChildren": boolean
+}
+//证件类型数组
+export type CertificatesTypeList = CertificatesType[]
+//定义证件类型接口返回数据类型
+export interface CertificatesTypeResponseData extends ResponseData {
+    data: CertificatesTypeList
+}
+//定义实名认证携带参数的类型
+export interface AuthParams {
+    "certificatesNo": string,
+    "certificatesType": string,
+    "certificatesUrl": string,
+    "name": string
+}
