@@ -1,6 +1,6 @@
 //定义用户相关的接口
 import request from '@/util/request'
-import type { AuthParams, CertificatesTypeResponseData, UserInformatiomResponseData, LoginData, OrderInfoResonpData, PayResultResponse, QrcodeResponseData, SubmitOrderResonpData, UserCodeResponseData, UserLoginResponseData, VisitorResonpData, WXLoginResponseData } from './type'
+import type { StatusListResponseData, AuthParams, CertificatesTypeResponseData, UserInformatiomResponseData, LoginData, OrderInfoResonpData, PayResultResponse, QrcodeResponseData, SubmitOrderResonpData, UserCodeResponseData, UserLoginResponseData, VisitorResonpData, WXLoginResponseData, OrderRecordsResponseData } from './type'
 enum API {
     GETUSERCODE_URL = '/sms/send/',
     USERLOGIN_URL = '/user/login',
@@ -22,7 +22,11 @@ enum API {
     //获取证件类型的接口
     CERTIFICATES_URL = '/cmn/dict/findByDictCode/',
     //用户实名认证的接口 post
-    USERAUAH_URL = '/user/auth/userAuah'
+    USERAUAH_URL = '/user/auth/userAuah',
+    //获取所有订单数据接口
+    ORDERALLINFO_URL = '/order/orderInfo/auth/',
+    //订单状态的接口
+    GETSTATUSLIST_URL = '/order/orderInfo/auth/getStatusList'
 }
 export const reqGetUserCode = (phone: string) => request.get<any, UserCodeResponseData>(API.GETUSERCODE_URL + phone)
 //用户登录
@@ -47,3 +51,7 @@ export const reqUserInfo = () => request.get<any, UserInformatiomResponseData>(A
 export const reqCertificates = (CertificatesType = 'CertificatesType') => request.get<any, CertificatesTypeResponseData>(API.CERTIFICATES_URL + CertificatesType)
 //用户实名认证，需要携带参数
 export const reqUserAuth = (data: AuthParams) => request.post<any, any>(API.USERAUAH_URL, data)
+//获取用户所有订单,需要携带query参数
+export const reqOrderAllInfo = (page: number, limit: number, patientId: string, orderStatus: string) => request.get<any, OrderRecordsResponseData>(API.ORDERALLINFO_URL + `${page}/${limit}?patientId=${patientId}&orderStatus=${orderStatus}`)
+//获取订单状态列表的方法
+export const reqStatusList = () => request.get<any, StatusListResponseData>(API.GETSTATUSLIST_URL)

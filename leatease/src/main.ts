@@ -13,6 +13,7 @@ import App from './App.vue'
 import HospitalTop from '@/components/hospitalTop/index.vue'
 import HospitalBottom from '@/components/hospitalBottom/index.vue'
 import Login from '@/components/login/index.vue'
+import Visitor from '@/components/visitor/index.vue'
 //引入路由
 import router from '@/router/index'
 // 引入element-plus
@@ -28,6 +29,7 @@ const app = createApp(App)
 app.component('HospitalTop', HospitalTop)
 app.component('HospitalBottom', HospitalBottom)
 app.component('Login', Login)
+app.component('Visitor', Visitor)
 //安装路由
 app.use(router)
 //安装element-plus

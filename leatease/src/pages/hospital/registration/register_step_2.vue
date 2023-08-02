@@ -88,7 +88,6 @@
 
 <script setup lang="ts">
 import { User } from '@element-plus/icons-vue'
-import Visitor from '@/pages/hospital/registration/visitor.vue'
 import { onMounted, ref } from 'vue';
 import { reqSubmitOrder, reqVisitorList } from '@/api/user';
 import { reqDoctorInfo } from "@/api/hospital"

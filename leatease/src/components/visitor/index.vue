@@ -8,6 +8,7 @@
                 </div>
                 <div class="header_right">
                     <el-button type="primary" circle :icon="Edit"></el-button>
+                    <el-button type="danger" circle :icon="Delete" v-show="showDelete"></el-button>
                 </div>
             </div>
         </template>
@@ -25,9 +26,9 @@
 </template>
 
 <script setup lang="ts">
-import { Edit } from '@element-plus/icons-vue';
+import { Edit, Delete } from '@element-plus/icons-vue';
 //接收父组件传来的数据
-defineProps(['visitor', 'visId'])
+defineProps(['visitor', 'visId', 'showDelete'])
 </script>
 
 <style scoped lang="scss">

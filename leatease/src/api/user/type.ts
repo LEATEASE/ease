@@ -173,3 +173,58 @@ export interface AuthParams {
     "certificatesUrl": string,
     "name": string
 }
+//代表用户订单详情信息
+export interface OrderItem {
+    "id": number,
+    "createTime": string,
+    "updateTime": string,
+    "isDeleted": number,
+    "param": {
+        "orderStatusString": string
+    },
+    "userId": number,
+    "outTradeNo": string,
+    "hoscode": string,
+    "hosname": string,
+    "depcode": string,
+    "depname": string,
+    "scheduleId": null,
+    "title": string,
+    "reserveDate": string,
+    "reserveTime": number,
+    "patientId": number,
+    "patientName": string,
+    "patientPhone": string,
+    "hosRecordId": string,
+    "number": number,
+    "fetchTime": string,
+    "fetchAddress": string,
+    "amount": number,
+    "quitTime": string,
+    "orderStatus": number
+}
+//定义订单的数组类型
+export type Records = OrderItem[]
+//定义接口返回数据ts类型
+export interface OrderRecordsResponseData extends ResponseData {
+    data: {
+        records: Records,
+        "total": number,
+        "size": number,
+        "current": number,
+        "orders": [],
+        "hitCount": boolean,
+        "searchCount": boolean,
+        "pages": number
+    }
+}
+//代表状态的数据类型
+export interface Status {
+    "comment": string,
+    "status": number
+}
+export type StatusList = Status[]
+//订单状态接口返回数据类型
+export interface StatusListResponseData extends ResponseData {
+    data: StatusList
+}
