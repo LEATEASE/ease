@@ -5,7 +5,7 @@
             <template #header>
                 <div class="card-header">
                     <span class="visitor">请点击选择就诊人</span>
-                    <el-button type="success" :icon="User">新增就诊人+</el-button>
+                    <el-button type="success" :icon="User" @click="goUser">新增就诊人+</el-button>
                 </div>
             </template>
             <!--展示所有就诊人的信息 -->
@@ -139,6 +139,10 @@ const submitOrder = async () => {
 
         })
     }
+}
+//新增就诊人，路由跳转到就诊人管理页面
+const goUser = () => {
+    $router.push({ path: '/user/patient', query: { type: 'add' } })
 }
 </script>
 <style scoped lang="scss">

@@ -228,3 +228,22 @@ export type StatusList = Status[]
 export interface StatusListResponseData extends ResponseData {
     data: StatusList
 }
+
+//新增与更新就诊人请求参数类型
+export interface AddOrUpdataVisitor {
+    id?: string,
+    name: string,
+    certificatesType: string,
+    certificatesNo: string,
+    sex: number,
+    birthdate: string,
+    phone: string,
+    isMarry: number,
+    isInsure: number,
+    addressSelected: string[],
+    address: string,
+    contactsName: string,
+    contactsCertificatesType: string,
+    contactsCertificatesNo: string,
+    contactsPhone: string
+}

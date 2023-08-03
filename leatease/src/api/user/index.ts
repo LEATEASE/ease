@@ -1,6 +1,6 @@
 //定义用户相关的接口
 import request from '@/util/request'
-import type { StatusListResponseData, AuthParams, CertificatesTypeResponseData, UserInformatiomResponseData, LoginData, OrderInfoResonpData, PayResultResponse, QrcodeResponseData, SubmitOrderResonpData, UserCodeResponseData, UserLoginResponseData, VisitorResonpData, WXLoginResponseData, OrderRecordsResponseData } from './type'
+import type { StatusListResponseData, AuthParams, CertificatesTypeResponseData, UserInformatiomResponseData, LoginData, OrderInfoResonpData, PayResultResponse, QrcodeResponseData, SubmitOrderResonpData, UserCodeResponseData, UserLoginResponseData, VisitorResonpData, WXLoginResponseData, OrderRecordsResponseData, AddOrUpdataVisitor } from './type'
 enum API {
     GETUSERCODE_URL = '/sms/send/',
     USERLOGIN_URL = '/user/login',
@@ -26,7 +26,13 @@ enum API {
     //获取所有订单数据接口
     ORDERALLINFO_URL = '/order/orderInfo/auth/',
     //订单状态的接口
-    GETSTATUSLIST_URL = '/order/orderInfo/auth/getStatusList'
+    GETSTATUSLIST_URL = '/order/orderInfo/auth/getStatusList',
+    //获取当前地址级联选择器数据接口地址
+    CITYINFO_URL = '/cmn/dict/findByParentId/',
+    //新增就诊人接口 post
+    ADDVISITOR_URL = '/user/patient/auth/save',
+    //更新就诊人信息接口 put
+    UPDATEVISITOR_URL = '/user/patient/auth/update'
 }
 export const reqGetUserCode = (phone: string) => request.get<any, UserCodeResponseData>(API.GETUSERCODE_URL + phone)
 //用户登录
@@ -55,3 +61,13 @@ export const reqUserAuth = (data: AuthParams) => request.post<any, any>(API.USER
 export const reqOrderAllInfo = (page: number, limit: number, patientId: string, orderStatus: string) => request.get<any, OrderRecordsResponseData>(API.ORDERALLINFO_URL + `${page}/${limit}?patientId=${patientId}&orderStatus=${orderStatus}`)
 //获取订单状态列表的方法
 export const reqStatusList = () => request.get<any, StatusListResponseData>(API.GETSTATUSLIST_URL)
+//获取省市地址接口方法
+export const reqCityInfo = (parentId: string) => request.get<any, any>(API.CITYINFO_URL + parentId)
+//新增与修改就诊人
+export const reqAddOrUpdataVisitor = (data: AddOrUpdataVisitor) => {
+    if (data.id) {
+        return request.put(API.UPDATEVISITOR_URL, data)
+    } else {
+        return request.post(API.ADDVISITOR_URL, data)
+    }
+}

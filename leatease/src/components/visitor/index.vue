@@ -7,7 +7,7 @@
                     <span class="username">{{ visitor.name }}</span>
                 </div>
                 <div class="header_right">
-                    <el-button type="primary" circle :icon="Edit"></el-button>
+                    <el-button type="primary" circle :icon="Edit" @click="$emit('changeScene')"></el-button>
                     <el-button type="danger" circle :icon="Delete" v-show="showDelete"></el-button>
                 </div>
             </div>
@@ -29,6 +29,7 @@
 import { Edit, Delete } from '@element-plus/icons-vue';
 //接收父组件传来的数据
 defineProps(['visitor', 'visId', 'showDelete'])
+let $emit = defineEmits(['changeScene'])
 </script>
 
 <style scoped lang="scss">
@@ -65,7 +66,7 @@ defineProps(['visitor', 'visId', 'showDelete'])
         p {
             // margin: 10px 0;
             font-size: 14px;
-            line-height: 30px;
+            line-height: 35px;
         }
 
         // .confirm {
