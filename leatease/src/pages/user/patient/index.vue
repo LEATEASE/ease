@@ -8,8 +8,8 @@
         </template>
         <!--展示所有就诊人的信息 -->
         <div class="visitor_box" v-if="scene === 0">
-            <Visitor @changeScene="changeScene" v-for="visitor in visitorList" :key="visitor.id" class="item"
-                :visitor="visitor" :showDelete="showDelete" />
+            <Visitor @changeScene="changeScene" @remove="remove" v-for="visitor in visitorList" :key="visitor.id"
+                class="item" :visitor="visitor" :showDelete="showDelete" />
         </div>
         <div class="addoredit" v-if="scene === 1">
             <el-divider content-position="left">就诊人信息</el-divider>
@@ -91,7 +91,7 @@
 <script setup lang="ts">
 import { reqCertificates, reqVisitorList, reqCityInfo, reqAddOrUpdataVisitor } from '@/api/user';
 import { VisitorResonpData, VisitorList, CertificatesTypeResponseData, CertificatesTypeList, AddOrUpdataVisitor } from '@/api/user/type';
-import { ref, onMounted, reactive } from 'vue'
+import { ref, onMounted, reactive, watch } from 'vue'
 import { User } from '@element-plus/icons-vue'
 import { ElMessage, type CascaderProps } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router';
@@ -128,6 +128,9 @@ onMounted(() => {
     if ($route.query.type === 'add') {
         scene.value = 1
     }
+    if ($route.query.type === 'edit') {
+        scene.value = 1
+    }
 })
 //获取就诊人信息
 const getVisitorInfo = async () => {
@@ -150,6 +153,7 @@ const addVisitor = () => {
 const reset = () => {
     //每次进来把原表单的数据清空
     Object.assign(AddVisitorParams, {
+        id: null,
         name: '',
         certificatesType: '',
         certificatesNo: '',
@@ -167,8 +171,11 @@ const reset = () => {
     })
 }
 //自定义事件，子组件告诉父组件切换场景
-const changeScene = () => {
+const changeScene = (visitor: AddOrUpdataVisitor) => {
     scene.value = 1
+    // console.log(visitor);
+    Object.assign(AddVisitorParams, visitor)
+
 }
 //级联选择器
 
@@ -210,6 +217,20 @@ const submit = async () => {
         })
     }
 
+}
+//监听页面数据回来，进入更新就诊人信息页面
+watch(() => visitorList.value, () => {
+    if ($route.query.type === 'edit') {
+        //通过传递过来的id找到就诊人的信息，发请求修改用户信息
+        const visitor = visitorList.value.find((item: any) => {
+            return item.id == $route.query.id
+        })
+        Object.assign(AddVisitorParams, visitor)
+    }
+})
+//remove,删除成功后，重新获取页面数据
+const remove = () => {
+    getVisitorInfo()
 }
 </script>
 

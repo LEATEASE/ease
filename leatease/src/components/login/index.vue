@@ -1,6 +1,6 @@
 <template>
     <div class="login_container">
-        <el-dialog v-model="userStore.visiable" title="用户登录">
+        <el-dialog v-model="userStore.visiable" title="用户登录" @close="closeDialog">
             <el-row>
                 <el-col :span="12">
                     <div class="login" v-show="handoff === 0">
@@ -94,10 +94,13 @@ import CountDown from '@/components/login/countDown/index.vue'
 import { reqWXLogin } from '@/api/user';
 import { computed, reactive, ref, watch } from 'vue'
 import { User, Lock } from '@element-plus/icons-vue'
+import { useRoute, useRouter } from 'vue-router';
 //获取用户数据仓库
 import { ElMessage } from 'element-plus';
 import useUserStore from '@/store/modules/user.ts'
 import { WXLoginResponseData } from '@/api/user/type';
+let $router = useRouter()
+let $route = useRoute()
 const userStore = useUserStore()
 let handoff = ref<number>(0)//控制手机登录0还是微信登录1
 let flag = ref<boolean>(false)//控制验证码倒计时false不显示,true显示
@@ -118,6 +121,9 @@ const closeDialog = () => {
     // console.log(123);
     // handoff.value = 0
     userStore.visiable = false
+    if ($route.query.rediect2) {
+        $router.push(`${$route.query.rediect2}`)
+    }
     // Object.assign(loginParams, { phone: '', code: '' })
     // //关闭窗口时，同时把表单校验结果清空
     // form.value.resetFields()
@@ -170,9 +176,11 @@ const getFlag = (value: boolean) => {
 const login = async () => {
     //表单校验结果
     await form.value.validate()
-
     userStore.getUserLogin(loginParams).then(() => {
         userStore.visiable = false
+        if ($route.query.rediect1) {
+            $router.push(`${$route.query.rediect1}`)
+        }
     }).catch((error) => {
         ElMessage({
             type: 'error',

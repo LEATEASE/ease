@@ -32,7 +32,9 @@ enum API {
     //新增就诊人接口 post
     ADDVISITOR_URL = '/user/patient/auth/save',
     //更新就诊人信息接口 put
-    UPDATEVISITOR_URL = '/user/patient/auth/update'
+    UPDATEVISITOR_URL = '/user/patient/auth/update',
+    //删除就诊人的接口
+    REMOVEVISITOR_URL = '/user/patient/auth/remove/'
 }
 export const reqGetUserCode = (phone: string) => request.get<any, UserCodeResponseData>(API.GETUSERCODE_URL + phone)
 //用户登录
@@ -71,3 +73,5 @@ export const reqAddOrUpdataVisitor = (data: AddOrUpdataVisitor) => {
         return request.post(API.ADDVISITOR_URL, data)
     }
 }
+//删除就诊人
+export const reqRemoveVisitor = (id: number) => request.delete<any, any>(API.REMOVEVISITOR_URL + id)

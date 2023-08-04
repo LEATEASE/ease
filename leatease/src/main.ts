@@ -38,4 +38,6 @@ app.use(ElementPlus, {
 })
 //安装pinia
 app.use(pinia)
+//引入路由鉴权的ts文件
+import '@/promission.ts'
 app.mount('#app')

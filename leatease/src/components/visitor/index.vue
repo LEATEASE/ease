@@ -7,8 +7,12 @@
                     <span class="username">{{ visitor.name }}</span>
                 </div>
                 <div class="header_right">
-                    <el-button type="primary" circle :icon="Edit" @click="$emit('changeScene')"></el-button>
-                    <el-button type="danger" circle :icon="Delete" v-show="showDelete"></el-button>
+                    <el-button type="primary" circle :icon="Edit" @click="handler"></el-button>
+                    <el-popconfirm @confirm="removeVisitor" :title="`你确定要删除${visitor.name}吗?`" width="200px">
+                        <template #reference>
+                            <el-button type="danger" circle :icon="Delete" v-show="showDelete"></el-button>
+                        </template>
+                    </el-popconfirm>
                 </div>
             </div>
         </template>
@@ -27,9 +31,39 @@
 
 <script setup lang="ts">
 import { Edit, Delete } from '@element-plus/icons-vue';
+import { useRouter, useRoute } from 'vue-router';
+import { reqRemoveVisitor } from '@/api/user/index'
+import { ElMessage } from 'element-plus';
 //接收父组件传来的数据
-defineProps(['visitor', 'visId', 'showDelete'])
-let $emit = defineEmits(['changeScene'])
+const props = defineProps(['visitor', 'visId', 'showDelete'])
+let $emit = defineEmits(['changeScene', 'remove'])
+let $router = useRouter()
+let $route = useRoute()
+//点击编辑按钮，跳转告诉父组件切换到编辑页面，且携带当前就诊人的信息
+const handler = () => {
+    if ($route.path === '/user/patient') {
+        $emit('changeScene', props.visitor)
+    } else {
+        $router.push({ path: '/user/patient', query: { type: 'edit', id: props.visitor.id } })
+    }
+}
+//确认删除就诊人的回调
+const removeVisitor = async () => {
+    try {
+        await reqRemoveVisitor(props.visitor.id)
+        ElMessage({
+            type: 'success',
+            message: '删除成功'
+        })
+        //触发自定义事件，删除成功后，通知父组件更新数据
+        $emit('remove')
+    } catch (error) {
+        ElMessage({
+            type: 'error',
+            message: '删除失败'
+        })
+    }
+}
 </script>
 
 <style scoped lang="scss">
@@ -62,6 +96,7 @@ let $emit = defineEmits(['changeScene'])
 
     .visitor_info {
         position: relative;
+        height: 300px;
 
         p {
             // margin: 10px 0;
